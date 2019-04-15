@@ -12,9 +12,9 @@ class CepWebpackPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.runWatch.tap('CepWebpackPlugin', () => {
-      console.log(compiler)
+    compiler.hooks.watchRun.tap('CepWebpackPlugin', () => {
       CepBundlerCore.compile({
+        out: compiler.outputPath,
         ...this.props
       })
     })
