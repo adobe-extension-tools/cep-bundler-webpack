@@ -6,7 +6,16 @@
   "scripts": {
     "start": "exit 0"
   },
-  "keywords": ["Adobe", "CEP", "ExtendScript", "TypeScript", "Bundler", "Extension", "Plugin", "Webpack"],
+  "keywords": [
+    "Adobe",
+    "CEP",
+    "ExtendScript",
+    "TypeScript",
+    "Bundler",
+    "Extension",
+    "Plugin",
+    "Webpack"
+  ],
   "author": "Koen Schmeets",
   "license": "MIT",
   "dependencies": {
