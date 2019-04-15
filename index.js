@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack')
 const NodeExternals = require('webpack-node-externals')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -24,6 +23,15 @@ class CepWebpackPlugin {
 exports.CepWebpackPlugin = CepWebpackPlugin
 
 exports.createConfig = function createConfig(opts) {
+  if (!opts.hasOwnProperty('out')) {
+    throw new Error('Please specify the output directory using the "out" parameter.')
+  }
+  if (!opts.hasOwnProperty('entry')) {
+    throw new Error('Please specify the entry file using the "entry" parameter.')
+  }
+  if (!opts.hasOwnProperty('type')) {
+    throw new Error('Please specify the compilation type using the "type" parameter (valid values are "cep" or "extendscript").')
+  }
   return {
     entry: opts.entry,
     module: {
@@ -54,13 +62,8 @@ exports.createConfig = function createConfig(opts) {
         }
       ]
     },
-    resolve: {
-      alias: {
-        '@dist': path.resolve(__dirname, 'dist'),
-      }
-    },
     devServer: {
-      contentBase: './dist',
+      contentBase: opts.out,
       hot: true
     },
     resolve: {
@@ -68,7 +71,7 @@ exports.createConfig = function createConfig(opts) {
     },
     output: {
       filename: opts.type === 'cep' ? 'cep.js' : 'extendscript.js',
-      path: path.resolve(__dirname, 'dist')
+      path: opts.out
     },
     plugins: opts.type === 'cep' ? [
       new HtmlWebpackPlugin({
