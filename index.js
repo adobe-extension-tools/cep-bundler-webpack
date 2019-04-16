@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const webpack = require('webpack')
 const NodeExternals = require('webpack-node-externals')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -91,8 +93,11 @@ exports.createConfig = function createConfig(opts) {
 }`
       })
     ] : [
-        new CleanWebpackPlugin(),
-      ],
+      new CleanWebpackPlugin(),
+      new WrapperPlugin({
+        header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
+      })
+    ],
     mode: 'development',
     externals: opts.type === 'cep'
       ? [
