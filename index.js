@@ -102,10 +102,10 @@ exports.createConfig = function createConfig(opts) {
       })
     ],
     mode: 'development',
+    target: opts.type === 'cep' ? 'node' : 'web',
     externals: opts.type === 'cep'
       ? [
         NodeExternals({
-          target: 'node',
           modulesFromFile: true,
           modulesFromFile: {
             exclude: ['devDependencies']
