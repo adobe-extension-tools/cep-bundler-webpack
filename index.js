@@ -82,6 +82,7 @@ exports.createConfig = function createConfig(opts) {
       new HtmlWebpackPlugin({
         title: 'CEP Extension'
       }),
+      new webpack.EnvironmentPlugin(Object.keys(process.env)),
       new CepWebpackPlugin({
         devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
         devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost'
