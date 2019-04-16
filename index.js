@@ -73,6 +73,7 @@ exports.createConfig = function createConfig(opts) {
       filename: opts.type === 'cep' ? 'cep.js' : 'extendscript.js',
       path: opts.out
     },
+    devtool: false,
     plugins: opts.type === 'cep' ? [
       new HtmlWebpackPlugin({
         title: 'CEP Extension'
