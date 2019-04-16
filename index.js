@@ -98,6 +98,7 @@ exports.createConfig = function createConfig(opts) {
       })
     ] : [
       new CleanWebpackPlugin(),
+      new webpack.EnvironmentPlugin(Object.keys(process.env)),
       new WrapperPlugin({
         header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
       })
