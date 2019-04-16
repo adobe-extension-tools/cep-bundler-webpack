@@ -71,7 +71,7 @@ exports.createConfig = function createConfig(opts) {
       host: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js', '.json']
     },
     output: {
       filename: opts.type === 'cep' ? 'cep.js' : 'extendscript.js',
