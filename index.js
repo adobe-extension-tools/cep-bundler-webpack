@@ -66,7 +66,9 @@ exports.createConfig = function createConfig(opts) {
     },
     devServer: {
       contentBase: opts.out,
-      hot: true
+      hot: true,
+      port: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
+      host: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js']
@@ -81,7 +83,8 @@ exports.createConfig = function createConfig(opts) {
         title: 'CEP Extension'
       }),
       new CepWebpackPlugin({
-        devPort: 8080
+        devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
+        devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost'
       }),
       new webpack.HotModuleReplacementPlugin(),
       new WrapperPlugin({
