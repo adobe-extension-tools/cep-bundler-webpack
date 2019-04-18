@@ -117,7 +117,7 @@ exports.createConfig = function createConfig(opts) {
       })
     ],
     mode: 'development',
-    target: opts.type === 'cep' ? 'node' : 'web',
+    target: opts.type === 'cep' ? 'node-webkit' : 'web',
     externals: opts.type === 'cep'
       ? [
         NodeExternals({
