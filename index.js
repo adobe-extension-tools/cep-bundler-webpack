@@ -16,7 +16,7 @@ class CepWebpackPlugin {
     const pluginName = 'CepWebpackPlugin'
     compiler.hooks.watchRun.tap(pluginName, () => {
       console.log('WATCH')
-      const isDev = this.props.hasOwnProperty('isDev') ? opts.isDev : true
+      const isDev = this.props.hasOwnProperty('isDev') ? this.props.isDev : true
       if (isDev) {
         process.env.IS_DEV = '1'
       }
