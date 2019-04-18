@@ -1,6 +1,6 @@
 {
   "name": "cep-bundler-webpack",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "CEP bundler for webpack",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
   "dependencies": {
     "cep-bundler-core": "0.0.12",
     "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.0.2",
     "css-loader": "^2.1.1",
     "extendscript-es5-shim-ts": "0.0.1",
     "file-loader": "^3.0.1",
@@ -32,6 +33,7 @@
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1",
     "webpack-node-externals": "^1.7.2",
-    "wrapper-webpack-plugin": "^2.1.0"
+    "wrapper-webpack-plugin": "^2.1.0",
+    "write-file-webpack-plugin": "^4.5.0"
   }
 }

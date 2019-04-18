@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WrapperPlugin = require('wrapper-webpack-plugin')
 const CepBundlerCore = require('cep-bundler-core')
+const WriteFilePlugin = require('write-file-webpack-plugin')
 
 class CepWebpackPlugin {
   constructor(props) {
@@ -88,6 +89,10 @@ exports.createConfig = function createConfig(opts) {
     },
     devtool: false,
     plugins: opts.type === 'cep' ? [
+      new WriteFilePlugin(),
+      new CopyPlugin([
+        { from: 'public', to: 'dist' }
+      ]),
       new CepWebpackPlugin({
         devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
         devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
