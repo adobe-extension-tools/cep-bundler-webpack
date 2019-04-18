@@ -92,14 +92,14 @@ exports.createConfig = function createConfig(opts) {
     },
     devtool: false,
     plugins: opts.type === 'cep' ? [
-      new HtmlWebpackPlugin({
-        title: 'CEP Extension'
-      }),
-      new webpack.EnvironmentPlugin(Object.keys(process.env)),
       new CepWebpackPlugin({
         devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
         devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost'
       }),
+      new HtmlWebpackPlugin({
+        title: 'CEP Extension'
+      }),
+      new webpack.EnvironmentPlugin(Object.keys(process.env)),
       new webpack.HotModuleReplacementPlugin(),
       new WrapperPlugin({
         header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
