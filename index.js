@@ -92,7 +92,7 @@ exports.createConfig = function createConfig(opts) {
     plugins: opts.type === 'cep' ? [
       new WriteFilePlugin(),
       new CopyPlugin([
-        { from: 'public/', to: 'dist/' }
+        { from: 'public/', to: '.' }
       ]),
       new CepWebpackPlugin({
         devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
