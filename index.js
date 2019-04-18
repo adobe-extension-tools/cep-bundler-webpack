@@ -15,7 +15,6 @@ class CepWebpackPlugin {
   apply(compiler) {
     const pluginName = 'CepWebpackPlugin'
     compiler.hooks.watchRun.tap(pluginName, () => {
-      console.log('WATCH HOOK')
       CepBundlerCore.compile({
         out: compiler.outputPath,
         isDev: true,
@@ -23,7 +22,6 @@ class CepWebpackPlugin {
       })
     })
     compiler.hooks.compile.tap(pluginName, () => {
-      console.log('COMPILE HOOK')
       CepBundlerCore.compile({
         out: compiler.outputPath,
         isDev: false,
