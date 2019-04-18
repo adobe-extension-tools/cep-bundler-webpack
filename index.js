@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WrapperPlugin = require('wrapper-webpack-plugin')
 const CepBundlerCore = require('cep-bundler-core')
+const CopyPlugin = require('copy-webpack-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 
 class CepWebpackPlugin {
