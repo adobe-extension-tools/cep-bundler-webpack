@@ -1,6 +1,6 @@
 {
   "name": "cep-bundler-webpack",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "CEP bundler for webpack",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "author": "Koen Schmeets",
   "license": "MIT",
   "dependencies": {
-    "cep-bundler-core": "0.0.9",
     "clean-webpack-plugin": "^2.0.1",
     "css-loader": "^2.1.1",
     "extendscript-es5-shim-ts": "0.0.1",
@@ -33,5 +32,8 @@
     "webpack-dev-server": "^3.3.1",
     "webpack-node-externals": "^1.7.2",
     "wrapper-webpack-plugin": "^2.1.0"
+  },
+  "devDependencies": {
+    "cep-bundler-core": "0.0.10"
   }
 }

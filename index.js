@@ -22,7 +22,6 @@ class CepWebpackPlugin {
       }
       CepBundlerCore.compile({
         out: compiler.outputPath,
-        isDev,
         ...this.props
       })
     })
@@ -30,7 +29,6 @@ class CepWebpackPlugin {
       console.log('COMPILE')
       CepBundlerCore.compile({
         out: compiler.outputPath,
-        isDev: false,
         ...this.props
       })
     })
@@ -46,7 +44,10 @@ exports.createConfig = function createConfig(opts) {
   if (!opts.hasOwnProperty('entry')) {
     throw new Error('Please specify the entry file using the "entry" parameter.')
   }
-  if (!opts.hasOwnProperty('type')) {
+  if (
+    !opts.hasOwnProperty('type')
+    || ['cep', 'extendscript'].indexOf(opts.type) === -1
+  ) {
     throw new Error('Please specify the compilation type using the "type" parameter (valid values are "cep" or "extendscript").')
   }
   return {
