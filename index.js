@@ -15,9 +15,13 @@ class CepWebpackPlugin {
   apply(compiler) {
     const pluginName = 'CepWebpackPlugin'
     compiler.hooks.watchRun.tap(pluginName, () => {
+      const isDev = this.props.hasOwnProperty('isDev') ? opts.isDev : true
+      if (isDev) {
+        process.env.IS_DEV = '1'
+      }
       CepBundlerCore.compile({
         out: compiler.outputPath,
-        isDev: true,
+        isDev,
         ...this.props
       })
     })
