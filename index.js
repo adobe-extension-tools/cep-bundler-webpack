@@ -14,21 +14,14 @@ class CepWebpackPlugin {
 
   apply(compiler) {
     const pluginName = 'CepWebpackPlugin'
-    compiler.hooks.watchRun.tap(pluginName, () => {
-      console.log('WATCH')
-      const isDev = this.props.hasOwnProperty('isDev') ? this.props.isDev : true
+    compiler.hooks.compile.tap(pluginName, () => {
+      const isDev = compiler.watchMode
       if (isDev) {
         process.env.IS_DEV = '1'
       }
       CepBundlerCore.compile({
         out: compiler.outputPath,
-        ...this.props
-      })
-    })
-    compiler.hooks.compile.tap(pluginName, () => {
-      console.log('COMPILE')
-      CepBundlerCore.compile({
-        out: compiler.outputPath,
+        isDev: !!isDev,
         ...this.props
       })
     })
@@ -101,8 +94,7 @@ exports.createConfig = function createConfig(opts) {
         env: opts.hasOwnProperty('env') ? opts.env : undefined,
         root: opts.hasOwnProperty('root') ? opts.root : undefined,
         htmlFilename: opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : undefined,
-        pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined,
-        isDev: opts.hasOwnProperty('isDev') ? opts.isDev : undefined,
+        pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined
       }),
       new HtmlWebpackPlugin({
         title: 'CEP Extension'
