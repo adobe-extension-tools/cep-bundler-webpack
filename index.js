@@ -2,8 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
 const NodeExternals = require('webpack-node-externals')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WrapperPlugin = require('wrapper-webpack-plugin')
 const CepBundlerCore = require('cep-bundler-core')
 
@@ -13,12 +13,15 @@ class CepWebpackPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.watchRun.tap('CepWebpackPlugin', () => {
+    const pluginName = 'CepWebpackPlugin'
+    const compile = () => {
       CepBundlerCore.compile({
         out: compiler.outputPath,
         ...this.props
       })
-    })
+    }
+    compiler.hooks.watchRun.tap(pluginName, compile)
+    compiler.hooks.compile.tap(pluginName, compile)
   }
 }
 
