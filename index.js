@@ -104,7 +104,9 @@ exports.createConfig = function createConfig(opts) {
         title: 'CEP Extension'
       }),
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
-      new webpack.HotModuleReplacementPlugin()
+      ...(opts.isDev === false ? [] : [
+        new webpack.HotModuleReplacementPlugin()
+      ])
     ] : [
       new CleanWebpackPlugin(),
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
