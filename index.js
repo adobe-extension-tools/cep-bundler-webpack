@@ -17,13 +17,10 @@ class CepWebpackPlugin {
   apply(compiler) {
     const pluginName = 'CepWebpackPlugin'
     compiler.hooks.compile.tap(pluginName, () => {
-      const isDev = compiler.watchMode
-      if (isDev) {
-        process.env.IS_DEV = '1'
-      }
+      const isDev = this.props.isDev !== undefined ? this.props.isDev : compiler.watchMode
       CepBundlerCore.compile({
         out: compiler.outputPath,
-        isDev: !!isDev,
+        isDev: isDev,
         ...this.props
       })
     })
@@ -100,21 +97,14 @@ exports.createConfig = function createConfig(opts) {
         env: opts.hasOwnProperty('env') ? opts.env : undefined,
         root: opts.hasOwnProperty('root') ? opts.root : undefined,
         htmlFilename: opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : undefined,
-        pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined
+        pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined,
+        isDev: opts.hasOwnProperty('isDev') ? opts.isDev : undefined
       }),
       new HtmlWebpackPlugin({
         title: 'CEP Extension'
       }),
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
-      new webpack.HotModuleReplacementPlugin(),
-      new WrapperPlugin({
-        header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
-    require = window.cep_node.require
-    Buffer = window.cep_node.Buffer
-    process = window.cep_node.process
-    __dirname = window.cep_node.__dirname
-}`
-      })
+      new webpack.HotModuleReplacementPlugin()
     ] : [
       new CleanWebpackPlugin(),
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
@@ -122,7 +112,7 @@ exports.createConfig = function createConfig(opts) {
         header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
       })
     ],
-    mode: 'development',
+    mode: opts.isDev === false ? 'production' : 'development',
     target: opts.type === 'cep' ? 'node-webkit' : 'web',
     externals: opts.type === 'cep'
       ? [
