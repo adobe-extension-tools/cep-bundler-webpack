@@ -85,7 +85,7 @@ exports.createConfig = function createConfig(opts) {
       filename: opts.type === 'cep' ? 'cep.js' : 'extendscript.js',
       path: opts.out
     },
-    devtool: false,
+    devtool: opts.type === 'cep' ? (opts.isDev ? 'eval-source-map' : false) : false,
     plugins: opts.type === 'cep' ? [
       new WriteFilePlugin(),
       new CopyPlugin([
