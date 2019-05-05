@@ -106,7 +106,15 @@ exports.createConfig = function createConfig(opts) {
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
       ...(opts.isDev === false ? [] : [
         new webpack.HotModuleReplacementPlugin()
-      ])
+      ]),
+      new WrapperPlugin({	
+        header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {	
+    require = window.cep_node.require	
+    Buffer = window.cep_node.Buffer	
+    process = window.cep_node.process	
+    __dirname = window.cep_node.__dirname	
+}`
+      })
     ] : [
       new CleanWebpackPlugin(),
       new webpack.EnvironmentPlugin(Object.keys(process.env)),
