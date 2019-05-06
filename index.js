@@ -42,7 +42,8 @@ exports.createConfig = function createConfig(opts) {
   ) {
     throw new Error('Please specify the compilation type using the "type" parameter (valid values are "cep" or "extendscript").')
   }
-  return {
+
+  const common = {
     entry: opts.entry,
     module: {
       rules: [
@@ -72,60 +73,91 @@ exports.createConfig = function createConfig(opts) {
         }
       ]
     },
-    devServer: {
-      contentBase: opts.out,
-      hot: true,
-      port: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
-      host: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
-    },
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.json']
     },
-    output: {
-      filename: opts.type === 'cep' ? 'cep.js' : 'extendscript.js',
-      path: opts.out
-    },
-    devtool: opts.type === 'cep' ? (opts.isDev ? 'eval-source-map' : false) : false,
-    plugins: opts.type === 'cep' ? [
-      new WriteFilePlugin(),
-      new CopyPlugin([
-        { from: 'public/', to: '.' }
-      ]),
-      new CepWebpackPlugin({
-        devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
-        devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
-        env: opts.hasOwnProperty('env') ? opts.env : undefined,
-        root: opts.hasOwnProperty('root') ? opts.root : undefined,
-        htmlFilename: opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : undefined,
-        pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined,
-        isDev: opts.hasOwnProperty('isDev') ? opts.isDev : undefined
-      }),
-      new HtmlWebpackPlugin({
-        title: 'CEP Extension'
-      }),
-      new webpack.EnvironmentPlugin(Object.keys(process.env)),
-      ...(opts.isDev === false ? [] : [
-        new webpack.HotModuleReplacementPlugin()
-      ]),
-      new WrapperPlugin({	
-        header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {	
-    require = window.cep_node.require	
-    Buffer = window.cep_node.Buffer	
-    process = window.cep_node.process	
-    __dirname = window.cep_node.__dirname	
-}`
-      })
-    ] : [
-      new CleanWebpackPlugin(),
-      new webpack.EnvironmentPlugin(Object.keys(process.env)),
-      new WrapperPlugin({
-        header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
-      })
-    ],
     mode: opts.isDev === false ? 'production' : 'development',
-    target: opts.type === 'cep' ? 'node-webkit' : 'web',
-    externals: opts.type === 'cep'
-      ? [
+  }
+
+  if (opts.type === 'extendscript') {
+    return {
+      ...common,
+      output: {
+        filename: 'extendscript.js',
+        path: opts.out
+      },
+      devtool: false,
+      plugins: [
+        new CleanWebpackPlugin(),
+        new webpack.EnvironmentPlugin(Object.keys(process.env)),
+        new WrapperPlugin({
+          header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
+        })
+      ],
+      target: 'web',
+      optimization: opts.isDev ? false : {
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                collapse_vars: false,
+                conditionals: false,
+                comparisons: false
+              },
+              output: {
+                comments: false
+              }
+            }
+          })
+        ]
+      }
+    }
+  } else if (opts.type === 'cep') {
+    return {
+      ...common,
+      devServer: {
+        contentBase: opts.out,
+        hot: true,
+        port: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
+        host: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
+      },
+      output: {
+        filename: 'cep.js',
+        path: opts.out
+      },
+      devtool: opts.isDev ? 'eval-source-map' : false,
+      plugins: [
+        new WriteFilePlugin(),
+        new CopyPlugin([
+          { from: 'public/', to: '.' }
+        ]),
+        new CepWebpackPlugin({
+          devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
+          devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
+          env: opts.hasOwnProperty('env') ? opts.env : undefined,
+          root: opts.hasOwnProperty('root') ? opts.root : undefined,
+          htmlFilename: opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : undefined,
+          pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined,
+          isDev: opts.hasOwnProperty('isDev') ? opts.isDev : undefined
+        }),
+        new HtmlWebpackPlugin({
+          title: 'CEP Extension'
+        }),
+        new webpack.EnvironmentPlugin(Object.keys(process.env)),
+        ...(opts.isDev === false ? [] : [
+          new webpack.HotModuleReplacementPlugin()
+        ]),
+        new WrapperPlugin({	
+          header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {	
+  require = window.cep_node.require	
+  Buffer = window.cep_node.Buffer	
+  process = window.cep_node.process	
+  __dirname = window.cep_node.__dirname	
+}`
+        })
+      ],
+      target: 'node-webkit',
+      externals: [
         NodeExternals({
           modulesFromFile: true,
           modulesFromFile: {
@@ -133,6 +165,6 @@ exports.createConfig = function createConfig(opts) {
           }
         })
       ]
-      : []
+    }
   }
 }
