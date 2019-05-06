@@ -95,7 +95,7 @@ exports.createConfig = function createConfig(opts) {
         })
       ],
       target: 'web',
-      optimization: opts.isDev ? false : {
+      optimization: opts.isDev ? { minimize: false } : {
         minimizer: [
           new TerserPlugin({
             terserOptions: {
@@ -164,7 +164,19 @@ exports.createConfig = function createConfig(opts) {
             exclude: ['devDependencies']
           }
         })
-      ]
+      ],
+      minimizer: opts.isDev ? { minimize: false } : {
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: true,
+              output: {
+                comments: false
+              }
+            }
+          })
+        ]
+      }
     }
   }
 }
