@@ -165,7 +165,7 @@ exports.createConfig = function createConfig(opts) {
           }
         })
       ],
-      minimizer: opts.isDev ? { minimize: false } : {
+      optimization: opts.isDev ? { minimize: false } : {
         minimizer: [
           new TerserPlugin({
             terserOptions: {
