@@ -44,6 +44,10 @@ exports.createConfig = function createConfig(opts) {
     throw new Error('Please specify the compilation type using the "type" parameter (valid values are "cep" or "extendscript").')
   }
 
+  if (!opts.root) {
+    opts.root = process.cwd()
+  }
+
   const common = {
     entry: opts.entry,
     module: {
