@@ -114,6 +114,9 @@ exports.createConfig = function createConfig(opts) {
       }
     }
   } else if (opts.type === 'cep') {
+    const env = opts.env ? opts.env : process.env.NODE_ENV;
+    const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'));
+    const config = CepBundlerCore.getConfig(pkg, env)
     return {
       ...common,
       devServer: {
@@ -132,28 +135,20 @@ exports.createConfig = function createConfig(opts) {
         new CopyPlugin([
           { from: 'public/', to: '.' }
         ]),
-        new CepWebpackPlugin({
-          devPort: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
-          devHost: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
-          env: opts.hasOwnProperty('env') ? opts.env : undefined,
-          root: opts.hasOwnProperty('root') ? opts.root : undefined,
-          htmlFilename: opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : undefined,
-          pkg: opts.hasOwnProperty('pkg') ? opts.pkg : undefined,
-          isDev: opts.hasOwnProperty('isDev') ? opts.isDev : undefined
-        }),
+        new CepWebpackPlugin(opts),
         new HtmlWebpackPlugin({
-          title: 'CEP Extension'
+          title: config.name
         }),
         new webpack.EnvironmentPlugin(Object.keys(process.env)),
         ...(opts.isDev === false ? [] : [
           new webpack.HotModuleReplacementPlugin()
         ]),
         new WrapperPlugin({	
-          header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {	
-  require = window.cep_node.require	
-  Buffer = window.cep_node.Buffer	
-  process = window.cep_node.process	
-  __dirname = window.cep_node.__dirname	
+          header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
+  require = window.cep_node.require
+  Buffer = window.cep_node.Buffer
+  process = window.cep_node.process
+  __dirname = window.cep_node.__dirname
 }`
         })
       ],
