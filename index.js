@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WrapperPlugin = require('wrapper-webpack-plugin')
 const CepBundlerCore = require('cep-bundler-core')
 const CopyPlugin = require('copy-webpack-plugin')
-const WriteFilePlugin = require('write-file-webpack-plugin')
+// const WriteFilePlugin = require('write-file-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 class CepWebpackPlugin {
@@ -118,30 +118,48 @@ exports.createConfig = function createConfig(opts) {
       }
     }
   } else if (opts.type === 'cep') {
-    const env = opts.env ? opts.env : process.env.NODE_ENV;
-    const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'));
+    const env = opts.env ? opts.env : process.env.NODE_ENV
+    const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'))
     const config = CepBundlerCore.getConfig(pkg, env)
+
+    let devPort = opts.hasOwnProperty('devPort') ? opts.devPort : 8080
+    let devHost = opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost'
+    let htmlFilename = opts.htmlFilename
+    let name = config.name
+    let outName = opts.outName ? opts.outName : path.basename(path.dirname(opts.entry)) + '.js'
+
+    if (opts.id && config.extensions) {
+      const extensionConfig = config.extensions.filter(extension => extension.id === opts.id)
+      if (extensionConfig.length === 1) {
+        devPort = extensionConfig[0].devPort
+        devHost = extensionConfig[0].devHost
+        htmlFilename = extensionConfig[0].htmlFilename
+        name = extensionConfig[0].name
+      }
+    }
+    
     return {
       ...common,
       devServer: {
         contentBase: opts.out,
         hot: true,
-        port: opts.hasOwnProperty('devPort') ? opts.devPort : 8080,
-        host: opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost',
+        port: devPort,
+        host: devHost,
       },
       output: {
-        filename: 'cep.js',
+        filename: outName,
         path: opts.out
       },
       devtool: opts.isDev ? 'eval-source-map' : false,
       plugins: [
-        new WriteFilePlugin(),
+        // new WriteFilePlugin(),
         new CopyPlugin([
           { from: 'public/', to: '.' }
         ]),
         new CepWebpackPlugin(opts),
         new HtmlWebpackPlugin({
-          title: config.name
+          filename: htmlFilename,
+          title: name
         }),
         new webpack.EnvironmentPlugin(Object.keys(process.env)),
         ...(opts.isDev === false ? [] : [
