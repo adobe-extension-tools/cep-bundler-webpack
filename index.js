@@ -142,6 +142,7 @@ exports.createConfig = function createConfig(opts) {
       ...common,
       devServer: {
         contentBase: opts.out,
+        index: htmlFilename,
         hot: true,
         port: devPort,
         host: devHost,
