@@ -121,11 +121,11 @@ exports.createConfig = function createConfig(opts) {
     const env = opts.env ? opts.env : process.env.NODE_ENV
     const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'))
     const config = CepBundlerCore.getConfig(pkg, env)
-
+    
     let devPort = opts.hasOwnProperty('devPort') ? opts.devPort : config.devPort
     let devHost = opts.hasOwnProperty('devHost') ? opts.devHost : config.devHost
     let htmlFilename = opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : config.htmlFilename
-    let name = config.name
+    let name = config.bundleName
     let outName = opts.outName ? opts.outName : path.basename(path.dirname(opts.entry)) + '.js'
 
     if (opts.id && config.extensions) {
