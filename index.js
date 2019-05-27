@@ -122,19 +122,28 @@ exports.createConfig = function createConfig(opts) {
     const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'))
     const config = CepBundlerCore.getConfig(pkg, env)
 
-    let devPort = opts.hasOwnProperty('devPort') ? opts.devPort : 8080
-    let devHost = opts.hasOwnProperty('devHost') ? opts.devHost : 'localhost'
-    let htmlFilename = opts.htmlFilename
+    let devPort = opts.hasOwnProperty('devPort') ? opts.devPort : config.devPort
+    let devHost = opts.hasOwnProperty('devHost') ? opts.devHost : config.devHost
+    let htmlFilename = opts.hasOwnProperty('htmlFilename') ? opts.htmlFilename : config.htmlFilename
     let name = config.name
     let outName = opts.outName ? opts.outName : path.basename(path.dirname(opts.entry)) + '.js'
 
     if (opts.id && config.extensions) {
-      const extensionConfig = config.extensions.filter(extension => extension.id === opts.id)
-      if (extensionConfig.length === 1) {
-        devPort = extensionConfig[0].devPort
-        devHost = extensionConfig[0].devHost
-        htmlFilename = extensionConfig[0].htmlFilename
-        name = extensionConfig[0].name
+      const extensionConfigs = config.extensions.filter(extension => extension.id === opts.id)
+      if (extensionConfigs.length === 1) {
+        const extensionConfig = extensionConfig[0]
+        if (extensionConfig.hasOwnProperty('devPort')) {
+          devPort = extensionConfig.devPort
+        }
+        if (extensionConfig.hasOwnProperty('devHost')) {
+          devHost = extensionConfig.devHost
+        }
+        if (extensionConfig.hasOwnProperty('htmlFilename')) {
+          htmlFilename = extensionConfig.htmlFilename
+        }
+        if (extensionConfig.hasOwnProperty('name')) {
+          name = extensionConfig.name
+        }
       }
     }
     

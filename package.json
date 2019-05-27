@@ -1,6 +1,6 @@
 {
   "name": "cep-bundler-webpack",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "description": "CEP bundler for webpack",
   "main": "index.js",
   "scripts": {
