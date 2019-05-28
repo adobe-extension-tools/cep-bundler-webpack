@@ -153,6 +153,8 @@ exports.createConfig = function createConfig(opts) {
         contentBase: opts.out,
         index: htmlFilename,
         hot: true,
+        injectClient: true,
+        injectHot: true,
         port: devPort,
         host: devHost,
       },
