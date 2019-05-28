@@ -32,7 +32,7 @@
     "ts-loader": "^5.3.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.3.1",
+    "webpack-dev-server": "^3.4.1",
     "webpack-node-externals": "^1.7.2",
     "wrapper-webpack-plugin": "^2.1.0",
     "write-file-webpack-plugin": "^4.5.0"
