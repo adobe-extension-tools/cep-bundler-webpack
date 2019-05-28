@@ -131,7 +131,7 @@ exports.createConfig = function createConfig(opts) {
     if (opts.id && config.extensions) {
       const extensionConfigs = config.extensions.filter(extension => extension.id === opts.id)
       if (extensionConfigs.length === 1) {
-        const extensionConfig = extensionConfig[0]
+        const extensionConfig = extensionConfigs[0]
         if (extensionConfig.hasOwnProperty('devPort')) {
           devPort = extensionConfig.devPort
         }
