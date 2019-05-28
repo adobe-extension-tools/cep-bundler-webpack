@@ -1,6 +1,6 @@
 {
   "name": "cep-bundler-webpack",
-  "version": "0.0.52",
+  "version": "0.0.53",
   "description": "CEP bundler for webpack",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "Koen Schmeets",
   "license": "MIT",
   "dependencies": {
-    "cep-bundler-core": "0.0.19",
+    "cep-bundler-core": "0.0.20",
     "clean-webpack-plugin": "^2.0.1",
     "copy-webpack-plugin": "^5.0.2",
     "css-loader": "^2.1.1",
