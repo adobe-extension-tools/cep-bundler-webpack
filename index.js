@@ -184,7 +184,6 @@ exports.createConfig = function createConfig(opts) {
   require = window.cep_node.require
   Buffer = window.cep_node.Buffer
   process = window.cep_node.process
-  __dirname = window.cep_node.__dirname
 }`
         })
       ],
