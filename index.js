@@ -96,6 +96,7 @@ exports.createConfig = function createConfig(opts) {
         new CleanWebpackPlugin(),
         new webpack.EnvironmentPlugin(Object.keys(process.env)),
         new WrapperPlugin({
+          test: /\.js$/,
           header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
         })
       ],
@@ -177,7 +178,8 @@ exports.createConfig = function createConfig(opts) {
         ...(opts.isDev === false ? [] : [
           new webpack.HotModuleReplacementPlugin()
         ]),
-        new WrapperPlugin({	
+        new WrapperPlugin({
+          test: /\.js$/,
           header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
   require = window.cep_node.require
   Buffer = window.cep_node.Buffer
