@@ -19,11 +19,16 @@ class CepWebpackPlugin {
     const pluginName = 'CepWebpackPlugin'
     compiler.hooks.compile.tap(pluginName, () => {
       const isDev = this.props.isDev !== undefined ? this.props.isDev : compiler.watchMode
-      CepBundlerCore.compile({
-        out: compiler.outputPath,
-        isDev: isDev,
-        ...this.props
-      })
+      CepBundlerCore.compile(
+        Object.assign(
+          {},
+          {
+            out: compiler.outputPath,
+            isDev: isDev
+          },
+          this.props
+        )
+      )
     })
   }
 }
@@ -85,39 +90,42 @@ exports.createConfig = function createConfig(opts) {
   }
 
   if (opts.type === 'extendscript') {
-    return {
-      ...common,
-      output: {
-        filename: 'extendscript.js',
-        path: opts.out
-      },
-      devtool: false,
-      plugins: [
-        new CleanWebpackPlugin(),
-        new webpack.EnvironmentPlugin(Object.keys(process.env)),
-        new WrapperPlugin({
-          test: /\.js$/,
-          header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
-        })
-      ],
-      target: 'web',
-      optimization: opts.isDev ? { minimize: false } : {
-        minimizer: [
-          new TerserPlugin({
-            terserOptions: {
-              compress: {
-                collapse_vars: false,
-                conditionals: false,
-                comparisons: false
-              },
-              output: {
-                comments: false
-              }
-            }
+    return Object.assign(
+      {},
+      common,
+      {
+        output: {
+          filename: 'extendscript.js',
+          path: opts.out
+        },
+        devtool: false,
+        plugins: [
+          new CleanWebpackPlugin(),
+          new webpack.EnvironmentPlugin(Object.keys(process.env)),
+          new WrapperPlugin({
+            test: /\.js$/,
+            header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
           })
-        ]
+        ],
+        target: 'web',
+        optimization: opts.isDev ? { minimize: false } : {
+          minimizer: [
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  collapse_vars: false,
+                  conditionals: false,
+                  comparisons: false
+                },
+                output: {
+                  comments: false
+                }
+              }
+            })
+          ]
+        }
       }
-    }
+    )
   } else if (opts.type === 'cep') {
     const env = opts.env ? opts.env : process.env.NODE_ENV
     const pkg = opts.pkg ? opts.pkg : require(path.join(opts.root, '/package.json'))
@@ -148,66 +156,70 @@ exports.createConfig = function createConfig(opts) {
       }
     }
     
-    return {
-      ...common,
-      devServer: {
-        contentBase: opts.out,
-        index: htmlFilename,
-        hot: true,
-        injectClient: true,
-        injectHot: true,
-        port: devPort,
-        host: devHost,
-      },
-      output: {
-        filename: outName,
-        path: opts.out
-      },
-      devtool: opts.isDev ? 'eval-source-map' : false,
-      plugins: [
-        // new WriteFilePlugin(),
-        new CopyPlugin([
-          { from: 'public/', to: '.' }
-        ]),
-        new CepWebpackPlugin(opts),
-        new HtmlWebpackPlugin({
-          filename: htmlFilename,
-          title: name
-        }),
-        new webpack.EnvironmentPlugin(Object.keys(process.env)),
-        ...(opts.isDev === false ? [] : [
-          new webpack.HotModuleReplacementPlugin()
-        ]),
-        new WrapperPlugin({
-          test: /\.js$/,
-          header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
-  require = window.cep_node.require
-  Buffer = window.cep_node.Buffer
-  process = window.cep_node.process
-}`
-        })
-      ],
-      target: 'node-webkit',
-      externals: [
-        NodeExternals({
-          modulesFromFile: true,
-          modulesFromFile: {
-            exclude: ['devDependencies']
-          }
-        })
-      ],
-      optimization: opts.isDev ? { minimize: false } : {
-        minimizer: [
-          new TerserPlugin({
-            terserOptions: {
-              compress: true,
-              output: {
-                comments: false
-              }
+    const config = Object.assign(
+      {},
+      common,
+      {
+        devServer: {
+          contentBase: opts.out,
+          index: htmlFilename,
+          hot: true,
+          injectClient: true,
+          injectHot: true,
+          port: devPort,
+          host: devHost,
+        },
+        output: {
+          filename: outName,
+          path: opts.out
+        },
+        devtool: opts.isDev ? 'eval-source-map' : false,
+        plugins: [
+          // new WriteFilePlugin(),
+          new CopyPlugin([
+            { from: 'public/', to: '.' }
+          ]),
+          new CepWebpackPlugin(opts),
+          new HtmlWebpackPlugin({
+            filename: htmlFilename,
+            title: name
+          }),
+          new webpack.EnvironmentPlugin(Object.keys(process.env)),
+          new WrapperPlugin({
+            test: /\.js$/,
+            header: `if (typeof window !== 'undefined' && window.hasOwnProperty('cep_node')) {
+    require = window.cep_node.require
+    Buffer = window.cep_node.Buffer
+    process = window.cep_node.process
+  }`
+          })
+        ],
+        target: 'node-webkit',
+        externals: [
+          NodeExternals({
+            modulesFromFile: true,
+            modulesFromFile: {
+              exclude: ['devDependencies']
             }
           })
-        ]
+        ],
+        optimization: opts.isDev ? { minimize: false } : {
+          minimizer: [
+            new TerserPlugin({
+              terserOptions: {
+                compress: true,
+                output: {
+                  comments: false
+                }
+              }
+            })
+          ]
+        }
       }
+    )
+    if (opts.isDev) {
+      config.plugins.push(new webpack.HotModuleReplacementPlugin())
     }
+    return config
   }
 }
