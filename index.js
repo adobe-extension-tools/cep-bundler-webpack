@@ -156,7 +156,7 @@ exports.createConfig = function createConfig(opts) {
       }
     }
     
-    const config = Object.assign(
+    const result = Object.assign(
       {},
       common,
       {
@@ -218,8 +218,8 @@ exports.createConfig = function createConfig(opts) {
       }
     )
     if (opts.isDev) {
-      config.plugins.push(new webpack.HotModuleReplacementPlugin())
+      result.plugins.push(new webpack.HotModuleReplacementPlugin())
     }
-    return config
+    return result
   }
 }
