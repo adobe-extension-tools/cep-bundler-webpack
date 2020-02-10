@@ -19,7 +19,7 @@
   "author": "Koen Schmeets",
   "license": "MIT",
   "dependencies": {
-    "cep-bundler-core": "0.0.24",
+    "cep-bundler-core": "0.0.26",
     "clean-webpack-plugin": "^2.0.1",
     "copy-webpack-plugin": "^5.0.2",
     "css-loader": "^2.1.1",
