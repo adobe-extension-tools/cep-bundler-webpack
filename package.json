@@ -1,6 +1,6 @@
 {
   "name": "cep-bundler-webpack",
-  "version": "0.0.64",
+  "version": "0.0.65",
   "description": "CEP bundler for webpack",
   "main": "index.js",
   "scripts": {
@@ -31,10 +31,7 @@
     "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^6.2.2",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
     "webpack-node-externals": "^1.7.2",
-    "wrapper-webpack-plugin": "^2.1.0",
-    "write-file-webpack-plugin": "^4.5.1"
+    "wrapper-webpack-plugin": "^2.1.0"
   }
 }

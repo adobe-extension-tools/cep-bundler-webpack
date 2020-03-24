@@ -3,11 +3,8 @@ const path = require('path')
 const webpack = require('webpack')
 const NodeExternals = require('webpack-node-externals')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WrapperPlugin = require('wrapper-webpack-plugin')
 const CepBundlerCore = require('cep-bundler-core')
-const CopyPlugin = require('copy-webpack-plugin')
-// const WriteFilePlugin = require('write-file-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 class CepWebpackPlugin {
@@ -100,7 +97,6 @@ exports.createConfig = function createConfig(opts) {
         },
         devtool: false,
         plugins: [
-          new CleanWebpackPlugin(),
           new webpack.EnvironmentPlugin(Object.keys(process.env)),
           new WrapperPlugin({
             test: /\.js$/,
@@ -176,9 +172,6 @@ exports.createConfig = function createConfig(opts) {
         devtool: opts.isDev ? 'eval-source-map' : false,
         plugins: [
           // new WriteFilePlugin(),
-          new CopyPlugin([
-            { from: 'public/', to: '.' }
-          ]),
           new CepWebpackPlugin(opts),
           new HtmlWebpackPlugin({
             filename: htmlFilename,
