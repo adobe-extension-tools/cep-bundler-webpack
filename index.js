@@ -100,7 +100,7 @@ exports.createConfig = function createConfig(opts) {
           new webpack.EnvironmentPlugin(Object.keys(process.env)),
           new WrapperPlugin({
             test: /\.js$/,
-            header: fs.readFileSync(path.join(process.cwd(), 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
+            header: fs.readFileSync(path.join( opts.root, 'node_modules', 'extendscript-es5-shim-ts', 'index.js'), 'utf8')
           })
         ],
         target: 'web',
